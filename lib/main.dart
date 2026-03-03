@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gtec/config/app_theme.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:gtec/data/datasources/pokemon_remote_data_source.dart';
@@ -33,7 +34,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Pokedex GTec',
-      theme: ThemeData(primarySwatch: Colors.red, useMaterial3: true),
+      theme: AppTheme.theme,
+      debugShowCheckedModeBanner: false,
       home: PokemonHomePage(provider: provider),
     );
   }
