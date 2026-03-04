@@ -60,13 +60,20 @@ class _PokemonDetailPageState extends State<PokemonDetailPage> {
     return Scaffold(
       appBar: AppBar(title: Text(widget.pokemon.name.toUpperCase())),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Imagen (siempre visible)
-              Hero(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Header con fondo de color
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.red.shade100,
+                borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(32),
+                  bottomRight: Radius.circular(32),
+                ),
+              ),
+              padding: const EdgeInsets.symmetric(vertical: 24.0),
+              child: Hero(
                 tag: 'pokemon_image_${widget.pokemon.id}',
                 child: Image.network(
                   widget.pokemon.imageUrl,
@@ -76,85 +83,92 @@ class _PokemonDetailPageState extends State<PokemonDetailPage> {
                       const Icon(Icons.error, size: 100),
                 ),
               ),
-              const SizedBox(height: 24),
-              if (_errorMessage != null)
-                Center(
-                  child: Column(
-                    children: [
-                      Text(
-                        'Error: $_errorMessage',
-                        style: const TextStyle(color: Colors.red),
-                      ),
-                      TextButton(
-                        onPressed: _fetchDetails,
-                        child: const Text('Reintentar'),
-                      ),
-                    ],
-                  ),
-                )
-              else
-                Skeletonizer(
-                  enabled: _isLoading,
-                  child: Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
+            ),
+            const SizedBox(height: 16),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: _errorMessage != null
+                  ? Center(
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          _buildInfoRow('ID', '#${displayPokemon.id}'),
-                          const Divider(),
-                          _buildInfoRow(
-                            'Nombre',
-                            displayPokemon.name.toUpperCase(),
+                          Text(
+                            'Error: $_errorMessage',
+                            style: const TextStyle(color: Colors.red),
                           ),
-                          const Divider(),
-                          // Altura y peso falsos para el skeleton si aun no hay detalles
-                          _buildInfoRow(
-                            'Altura',
-                            _isLoading
-                                ? '0.0 m'
-                                : '${(displayPokemon.height ?? 0) / 10} m',
-                          ),
-                          const Divider(),
-                          _buildInfoRow(
-                            'Peso',
-                            _isLoading
-                                ? '0.0 kg'
-                                : '${(displayPokemon.weight ?? 0) / 10} kg',
-                          ),
-                          const Divider(),
-                          const Text(
-                            'Tipos',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Wrap(
-                            spacing: 8.0,
-                            children: _isLoading
-                                ? [
-                                    const Chip(label: Text('Loading')),
-                                    const Chip(label: Text('Loading')),
-                                  ]
-                                : (displayPokemon.types ?? [])
-                                      .map(
-                                        (type) => Chip(
-                                          label: Text(type.toUpperCase()),
-                                          backgroundColor: Colors.red.shade100,
-                                        ),
-                                      )
-                                      .toList(),
+                          TextButton(
+                            onPressed: _fetchDetails,
+                            child: const Text('Reintentar'),
                           ),
                         ],
                       ),
+                    )
+                  : Skeletonizer(
+                      enabled: _isLoading,
+                      child: Card(
+                        elevation: 2,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(24.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _buildInfoRow('ID', '#${displayPokemon.id}'),
+                              const Divider(),
+                              _buildInfoRow(
+                                'Nombre',
+                                displayPokemon.name.toUpperCase(),
+                              ),
+                              const Divider(),
+                              // Altura y peso falsos para el skeleton si aun no hay detalles
+                              _buildInfoRow(
+                                'Altura',
+                                _isLoading
+                                    ? '0.0 m'
+                                    : '${(displayPokemon.height ?? 0) / 10} m',
+                              ),
+                              const Divider(),
+                              _buildInfoRow(
+                                'Peso',
+                                _isLoading
+                                    ? '0.0 kg'
+                                    : '${(displayPokemon.weight ?? 0) / 10} kg',
+                              ),
+                              const Divider(),
+                              const Text(
+                                'Tipos',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Wrap(
+                                spacing: 8.0,
+                                children: _isLoading
+                                    ? [
+                                        const Chip(label: Text('Loading')),
+                                        const Chip(label: Text('Loading')),
+                                      ]
+                                    : (displayPokemon.types ?? [])
+                                          .map(
+                                            (type) => Chip(
+                                              label: Text(type.toUpperCase()),
+                                              backgroundColor:
+                                                  Colors.red.shade100,
+                                            ),
+                                          )
+                                          .toList(),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

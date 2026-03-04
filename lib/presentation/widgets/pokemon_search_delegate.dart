@@ -48,30 +48,56 @@ class PokemonSearchDelegate extends SearchDelegate<Pokemon?> {
 
         return ListView(
           children: [
-            ListTile(
-              onTap: () {
-                // Cerramos la búsqueda y podemos opcionalmente pasar el pokemon seleccionado,
-                // pero aquí lo más fácil es simplemente navegar a la vista de detalles.
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        PokemonDetailPage(pokemon: pokemon, provider: provider),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 12.0,
+                vertical: 4.0,
+              ),
+              child: Card(
+                child: ListTile(
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16.0,
+                    vertical: 8.0,
                   ),
-                );
-              },
-              leading: Hero(
-                tag: 'pokemon_image_${pokemon.id}',
-                child: Image.network(
-                  pokemon.imageUrl,
-                  width: 50,
-                  height: 50,
-                  errorBuilder: (context, error, stackTrace) =>
-                      const Icon(Icons.error),
+                  onTap: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PokemonDetailPage(
+                          pokemon: pokemon,
+                          provider: provider,
+                        ),
+                      ),
+                    );
+                  },
+                  leading: Hero(
+                    tag: 'pokemon_image_${pokemon.id}',
+                    child: Container(
+                      width: 60,
+                      height: 60,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade100,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Image.network(
+                        pokemon.imageUrl,
+                        fit: BoxFit.contain,
+                        errorBuilder: (context, error, stackTrace) =>
+                            const Icon(Icons.error),
+                      ),
+                    ),
+                  ),
+                  title: Text(
+                    pokemon.name.toUpperCase(),
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Text(
+                    '#${pokemon.id.toString().padLeft(3, '0')}',
+                    style: TextStyle(color: Colors.grey.shade600),
+                  ),
+                  trailing: const Icon(Icons.chevron_right, color: Colors.grey),
                 ),
               ),
-              title: Text(pokemon.name.toUpperCase()),
-              subtitle: Text('#${pokemon.id}'),
             ),
           ],
         );

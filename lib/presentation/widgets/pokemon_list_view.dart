@@ -99,34 +99,70 @@ class _PokemonListViewState extends State<PokemonListView> {
               }
 
               final pokemon = items[index];
-              return ListTile(
-                onTap: isInitialLoading
-                    ? null
-                    : () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => PokemonDetailPage(
-                              pokemon: pokemon,
-                              provider: widget.provider,
+              return Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12.0,
+                  vertical: 4.0,
+                ),
+                child: Card(
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16.0,
+                      vertical: 8.0,
+                    ),
+                    onTap: isInitialLoading
+                        ? null
+                        : () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => PokemonDetailPage(
+                                  pokemon: pokemon,
+                                  provider: widget.provider,
+                                ),
+                              ),
+                            );
+                          },
+                    leading: isInitialLoading
+                        ? Container(
+                            width: 60,
+                            height: 60,
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade300,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          )
+                        : Hero(
+                            tag: 'pokemon_image_${pokemon.id}',
+                            child: Container(
+                              width: 60,
+                              height: 60,
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade100,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Image.network(
+                                pokemon.imageUrl,
+                                fit: BoxFit.contain,
+                                errorBuilder: (context, error, stackTrace) =>
+                                    const Icon(Icons.error),
+                              ),
                             ),
                           ),
-                        );
-                      },
-                leading: isInitialLoading
-                    ? Container(width: 50, height: 50, color: Colors.grey)
-                    : Hero(
-                        tag: 'pokemon_image_${pokemon.id}',
-                        child: Image.network(
-                          pokemon.imageUrl,
-                          width: 50,
-                          height: 50,
-                          errorBuilder: (context, error, stackTrace) =>
-                              const Icon(Icons.error),
-                        ),
-                      ),
-                title: Text(pokemon.name.toUpperCase()),
-                subtitle: Text('#${pokemon.id}'),
+                    title: Text(
+                      pokemon.name.toUpperCase(),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: Text(
+                      '#${pokemon.id.toString().padLeft(3, '0')}',
+                      style: TextStyle(color: Colors.grey.shade600),
+                    ),
+                    trailing: const Icon(
+                      Icons.chevron_right,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ),
               );
             },
           ),
