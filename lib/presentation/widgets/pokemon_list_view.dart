@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:gtec/domain/entities/pokemon.dart';
 import 'package:gtec/presentation/providers/pokemon_provider.dart';
+import 'package:gtec/presentation/pages/pokemon_detail_page.dart';
 
 class PokemonListView extends StatefulWidget {
   final PokemonProvider provider;
@@ -99,14 +100,30 @@ class _PokemonListViewState extends State<PokemonListView> {
 
               final pokemon = items[index];
               return ListTile(
+                onTap: isInitialLoading
+                    ? null
+                    : () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PokemonDetailPage(
+                              pokemon: pokemon,
+                              provider: widget.provider,
+                            ),
+                          ),
+                        );
+                      },
                 leading: isInitialLoading
                     ? Container(width: 50, height: 50, color: Colors.grey)
-                    : Image.network(
-                        pokemon.imageUrl,
-                        width: 50,
-                        height: 50,
-                        errorBuilder: (context, error, stackTrace) =>
-                            const Icon(Icons.error),
+                    : Hero(
+                        tag: 'pokemon_image_${pokemon.id}',
+                        child: Image.network(
+                          pokemon.imageUrl,
+                          width: 50,
+                          height: 50,
+                          errorBuilder: (context, error, stackTrace) =>
+                              const Icon(Icons.error),
+                        ),
                       ),
                 title: Text(pokemon.name.toUpperCase()),
                 subtitle: Text('#${pokemon.id}'),

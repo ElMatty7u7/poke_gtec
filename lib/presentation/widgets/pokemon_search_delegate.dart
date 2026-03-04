@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gtec/domain/entities/pokemon.dart';
 import 'package:gtec/presentation/providers/pokemon_provider.dart';
+import 'package:gtec/presentation/pages/pokemon_detail_page.dart';
 
 class PokemonSearchDelegate extends SearchDelegate<Pokemon?> {
   final PokemonProvider provider;
@@ -48,12 +49,26 @@ class PokemonSearchDelegate extends SearchDelegate<Pokemon?> {
         return ListView(
           children: [
             ListTile(
-              leading: Image.network(
-                pokemon.imageUrl,
-                width: 50,
-                height: 50,
-                errorBuilder: (context, error, stackTrace) =>
-                    const Icon(Icons.error),
+              onTap: () {
+                // Cerramos la búsqueda y podemos opcionalmente pasar el pokemon seleccionado,
+                // pero aquí lo más fácil es simplemente navegar a la vista de detalles.
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        PokemonDetailPage(pokemon: pokemon, provider: provider),
+                  ),
+                );
+              },
+              leading: Hero(
+                tag: 'pokemon_image_${pokemon.id}',
+                child: Image.network(
+                  pokemon.imageUrl,
+                  width: 50,
+                  height: 50,
+                  errorBuilder: (context, error, stackTrace) =>
+                      const Icon(Icons.error),
+                ),
               ),
               title: Text(pokemon.name.toUpperCase()),
               subtitle: Text('#${pokemon.id}'),

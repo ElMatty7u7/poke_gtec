@@ -5,6 +5,9 @@ class PokemonModel extends Pokemon {
     required super.id,
     required super.name,
     required super.imageUrl,
+    super.height,
+    super.weight,
+    super.types,
   });
 
   // Used for list response from /pokemon?offset=X&limit=X
@@ -21,8 +24,24 @@ class PokemonModel extends Pokemon {
   factory PokemonModel.fromJsonDetail(Map<String, dynamic> json) {
     final id = json['id'] as int;
     final name = json['name'] as String;
+    final height = json['height'] as int?;
+    final weight = json['weight'] as int?;
 
-    return PokemonModel(id: id, name: name, imageUrl: _getImageUrl(id));
+    List<String>? types;
+    if (json['types'] != null) {
+      types = (json['types'] as List)
+          .map((t) => t['type']['name'] as String)
+          .toList();
+    }
+
+    return PokemonModel(
+      id: id,
+      name: name,
+      imageUrl: _getImageUrl(id),
+      height: height,
+      weight: weight,
+      types: types,
+    );
   }
 
   static String _getImageUrl(int id) {
